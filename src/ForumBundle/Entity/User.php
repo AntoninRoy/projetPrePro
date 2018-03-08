@@ -44,7 +44,7 @@ class User implements UserInterface
   private $password;
 
   /**
-   * @ORM\Column(name="salt", type="string", length=255)
+   * @ORM\Column(name="salt", type="string", length=255,nullable=true)
    */
   private $salt;
 
@@ -86,5 +86,61 @@ class User implements UserInterface
     public function getRoles()
     {
         return $this->roles;
+    }
+
+    /**
+     * Set username.
+     *
+     * @param string $username
+     *
+     * @return User
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * Set password.
+     *
+     * @param string $password
+     *
+     * @return User
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Set salt.
+     *
+     * @param string $salt
+     *
+     * @return User
+     */
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+
+        return $this;
+    }
+
+    /**
+     * Set roles.
+     *
+     * @param array $roles
+     *
+     * @return User
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 }

@@ -43,7 +43,7 @@ class Message
 
     /**
      * @ORM\ManyToOne(targetEntity="ForumBundle\Entity\Message",cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $replyMessage;
 

@@ -35,6 +35,12 @@ class Topic
      */
     private $description;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="ForumBundle\Entity\User",cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
 
     /**
      * Get id.
@@ -92,5 +98,29 @@ class Topic
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set user.
+     *
+     * @param \ForumBundle\Entity\User $user
+     *
+     * @return Topic
+     */
+    public function setUser(\ForumBundle\Entity\User $user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user.
+     *
+     * @return \ForumBundle\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }
