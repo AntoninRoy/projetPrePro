@@ -62,7 +62,7 @@ class UserController extends Controller
       {
         // Si le visiteur est déjà identifié, on le redirige vers l'accueil
         if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-          return $this->redirectToRoute('oc_platform_accueil');
+          return $this->redirectToRoute('home');
         }
 
         // Le service authentication_utils permet de récupérer le nom d'utilisateur
