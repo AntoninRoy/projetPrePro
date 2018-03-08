@@ -4,6 +4,10 @@ namespace ForumBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+use ForumBundle\Entity\Topic;
+
 
 class UserController extends Controller
 {
@@ -23,22 +27,35 @@ class UserController extends Controller
 
     public function newTopicAction()
     {
+        
+        
         return $this->render('ForumBundle:User:new_topic.html.twig', array(
             // ...
         ));
     }
 
-    public function topicAction()
+    public function topicAction($id)
     {
+        $em = $this->getDoctrine()->getManager();
+        $topic = $em->getRepository('ForumBundle:Topic')->find($id);
+        if(!$topic){
+            return new Response("Le topic n'existe pas");
+        }
+
+
         return $this->render('ForumBundle:User:topic.html.twig', array(
-            // ...
+            "topic"=>$topic,
         ));
+        
     }
 
     public function homeAction()
     {
+        $em = $this->getDoctrine()->getManager();
+
+        $topics = $em->getRepository('ForumBundle:Topic')->findAll();
         return $this->render('ForumBundle:User:home.html.twig', array(
-            // ...
+            "topics"=>$topics
         ));
     }
     public function loginAction(Request $request)

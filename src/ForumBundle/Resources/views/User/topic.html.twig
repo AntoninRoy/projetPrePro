@@ -3,5 +3,7 @@
 {% block title %}ForumBundle:User:topic{% endblock %}
 
 {% block body %}
-<h1>Welcome to the User:topic page</h1>
+<h1>{{ topic.title}}</h1>
+<p>{{ topic.description}}</p>
+<p>Auteur : {{ topic.user.username}}</p>
 {% endblock %}

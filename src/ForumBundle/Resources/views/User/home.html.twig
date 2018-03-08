@@ -3,5 +3,10 @@
 {% block title %}ForumBundle:User:home{% endblock %}
 
 {% block body %}
-<h1>Welcome to the User:home page</h1>
+<h1>Projets : </h1>
+<ul>
+{% for topic in topics %}
+       <a href="{{ path('topic', { 'id': topic.id }) }}"><li>{{ topic.title }}</li></a>
+    {% endfor %}
+</ul>
 {% endblock %}
