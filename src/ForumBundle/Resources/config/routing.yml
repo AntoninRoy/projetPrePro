@@ -1,0 +1,38 @@
+display_account:
+    path:     /admin/displayAccount
+    defaults: { _controller: ForumBundle:Admin:displayAccount }
+
+
+  
+login_check:
+    path: /login_check
+
+logout:
+    path: /logout
+
+create_account:
+    path:     /createAccount
+    defaults: { _controller: ForumBundle:User:createAccount }
+
+account_parameters:
+    path:     /accountParameters
+    defaults: { _controller: ForumBundle:User:accountParameters }
+
+new_topic:
+    path:     /newTopic
+    defaults: { _controller: ForumBundle:User:newTopic }
+
+topic:
+    path:     /topic/{id}
+    defaults: 
+        _controller: ForumBundle:User:topic 
+    requirements:
+        id: '[1-9]\d*'
+
+home:
+    path:     /
+    defaults: { _controller: ForumBundle:User:home }
+
+login:
+    path:     /login
+    defaults: { _controller: ForumBundle:User:login }
