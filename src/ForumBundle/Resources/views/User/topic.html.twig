@@ -1,9 +1,60 @@
-{% extends "::base.html.twig" %}
+{% extends "::layoutUser.html.twig" %}
 
 {% block title %}ForumBundle:User:topic{% endblock %}
 
 {% block body %}
-<h1>{{ topic.title}}</h1>
-<p>{{ topic.description}}</p>
-<p>Auteur : {{ topic.user.username}}</p>
+<div class="row">
+	<div class="col-sm-12 col-md-9">
+		<div class="card">
+			<div class="card-header">
+		   Le projet :
+		  </div>
+		  <div class="card-body">
+		    <div class="row">
+		    <div class="col-sm-12 col-md-3">
+		    	<img src="https://images-na.ssl-images-amazon.com/images/I/61-BQ4DBoQL._UY395_.jpg" class="img-fluid" alt="Responsive image">
+		    </div>
+		    <div class="col-sm-12 col-md-9">
+		    	<h4 class="card-title">{{ topic.title}}</h4>
+		    	<p class="card-text">{{ topic.description}}</p>
+		    </div>
+			</div>
+		    
+		  </div>
+		</div>
+	</div>
+	<div class="col-sm-12 col-md-3">
+		<div class="card">
+		  <div class="card-header">
+		   Auteur : 
+		  </div>
+		  <div class="card-body">
+		    <h4 class="card-title">{{ topic.user.username}} </h4>
+		  </div>
+		</div>
+	</div>
+	<div class="col-sm-12 col-md-9">
+		<div class="card">
+			<div class="card-header">
+		   Commentaires :
+		  </div>
+		  <div class="card-body">
+
+		  		{% for comment in comments %}
+		  		<div class="alert alert-secondary" role="alert">
+				  <p><strong>Message de {{ comment.user.username}} : </strong></p>
+				  <p>{{ comment.content}}</p>
+				</div>
+		  		
+		  			
+		  		{% endfor %}
+		  </div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
 {% endblock %}

@@ -1,16 +1,40 @@
-{% extends "::base.html.twig" %}
+{% extends "::layoutUser.html.twig" %}
 
 {% block title %}ForumBundle:User:home{% endblock %}
 
 {% block body %}
    
 
+<div class="card">
+ 
+  <div class="card-body">
+    <h4 class="card-title">Bienvenue les amis c'est cool bla bla </h4>
+    <p class="card-text">Ici tu vas pouvoir faire ça et aussi ça c'est fantastique</p>
+    <p>Tu peux aussi créer un nouveau projet afin de réunir du monde !</p>
+    <a href="{{ path('new_topic') }}" class="btn btn-primary">Proposer un nouveau projet</a>
+  </div>
+</div>
+
+<div class="row">
+	{% for topic in topics %}
+	<div class="col-sm-4 col-md-3">
+		<div class="card">
+			<a href="{{ path('topic', { 'id': topic.id }) }}">
+				<div class="card-header">
+					{{ topic.title }}
+				</div>
+			</a>
+			<div class="card-body">
+			{{ topic.description}}
+			</div>
+			<div class="card-footer text-muted">
+			  par {{ topic.user.username }} le  DD/MM/YYYY
+			  </div>
+		</div>
+	</div>
+	{% endfor %}
+	
+</div>
 
 
-<h1>Projets : </h1>
-<ul>
-{% for topic in topics %}
-       <a href="{{ path('topic', { 'id': topic.id }) }}"><li>{{ topic.title }}</li></a>
-    {% endfor %}
-</ul>
 {% endblock %}

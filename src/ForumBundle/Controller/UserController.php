@@ -41,10 +41,11 @@ class UserController extends Controller
         if(!$topic){
             return new Response("Le topic n'existe pas");
         }
-
+        $comments = $em->getRepository('ForumBundle:Message')->findByTopic($topic);
 
         return $this->render('ForumBundle:User:topic.html.twig', array(
             "topic"=>$topic,
+            "comments"=>$comments
         ));
         
     }
