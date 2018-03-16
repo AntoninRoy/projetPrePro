@@ -4,4 +4,36 @@
 
 {% block body %}
 <h1>Welcome to the User:newTopic page</h1>
+
+<div class="card">
+ 
+  <div class="card-body">
+    {{ form_start(form) }}
+
+  	{# Les erreurs générales du formulaire. #}
+  	{{ form_errors(form) }}
+	  <div class="form-group">
+	    
+	    {{ form_label(form.title, "Titre du projet" )}}
+
+	    {# Affichage des erreurs pour ce champ précis. #}
+	    {{ form_errors(form.title) }}
+
+	    {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+	  </div>
+	  <div class="form-group">
+	  	{{ form_label(form.description, "Description du projet") }}
+    	{{ form_errors(form.description) }}
+      	{{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+	    
+	  </div>
+	  
+	  {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+	  {{ form_rest(form) }}
+
+	  	{# Fermeture de la balise <form> du formulaire HTML #}
+	  {{ form_end(form) }}
+	</form>
+  </div>
+</div>
 {% endblock %}

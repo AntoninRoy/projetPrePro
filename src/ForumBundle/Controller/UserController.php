@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use ForumBundle\Entity\Topic;
+use ForumBundle\Form\TopicType;
+
 
 
 class UserController extends Controller
@@ -25,12 +27,27 @@ class UserController extends Controller
         ));
     }
 
-    public function newTopicAction()
+    public function newTopicAction(Request $request)
     {
-        
+        $topic = new Topic();
+        $form   = $this->get('form.factory')->create(TopicType::class, $topic);
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+              $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+              if ($this->getUser()) {
+                $em = $this->getDoctrine()->getManager();
+                $topic->setUser($this->getUser());
+                $em->persist($topic);
+                $em->flush();
+
+                $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+              }
+              
+
+          return $this->redirectToRoute('topic', array('id' => $topic->getId()));
+        }
         
         return $this->render('ForumBundle:User:new_topic.html.twig', array(
-            // ...
+             'form' => $form->createView(),
         ));
     }
 
