@@ -8,16 +8,48 @@ use Symfony\Component\HttpFoundation\Response;
 
 use ForumBundle\Entity\Topic;
 use ForumBundle\Form\TopicType;
+use ForumBundle\Entity\User;
+
+use ForumBundle\Form\UserType;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+
 
 
 
 class UserController extends Controller
 {
-    public function createAccountAction()
+    public function createAccountAction(Request $request)
     {
-        return $this->render('ForumBundle:User:create_account.html.twig', array(
-            // ...
-        ));
+        // 1) build the form
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+        $passwordEncoder = $this->get('security.password_encoder');
+
+        // 2) handle the submit (will only happen on POST)
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            // 3) Encode the password (you could also do this via Doctrine listener)
+            $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
+            $user->setPassword($password);
+
+            // 4) save the User!
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                $this->container->get('security.token_storage')->setToken($token);
+            // ... do any other work - like sending them an email, etc
+            // maybe set a "flash" success message for the user
+
+            $request->getSession()->getFlashBag()->add('notice', 'Votre inscrition est terminée, vous pouvez maintenant profiter pleinement du site.');
+
+
+            return $this->redirectToRoute('home');
+        }
+        return $this->render('ForumBundle:User:create_account.html.twig', array('form' => $form->createView()));
     }
 
     public function accountParametersAction()

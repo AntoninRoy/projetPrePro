@@ -2,3 +2,6 @@ services:
 #    forum.example:
 #        class: ForumBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
+  app.security.login_form_authenticator:
+          class: AppBundle\Security\LoginFormAuthenticator
+          autowire: true

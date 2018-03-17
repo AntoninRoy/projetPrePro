@@ -4,12 +4,16 @@ namespace ForumBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * User
  *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="ForumBundle\Repository\UserRepository")
+ * @UniqueEntity("username",  message = "Un utilisateur possède déjà ce pseudo.")
  */
 class User implements UserInterface
 
@@ -33,25 +37,31 @@ class User implements UserInterface
     {
         return $this->id;
     }
-    /**
-   * @ORM\Column(name="username", type="string", length=255, unique=true)
-   */
-  private $username;
+        /**
+       * @ORM\Column(name="username", type="string", length=255, unique=true)
+       */
+      private $username;
 
-  /**
-   * @ORM\Column(name="password", type="string", length=255)
-   */
-  private $password;
+      /**
+       * @ORM\Column(name="password", type="string", length=255)
+       */
+      private $password;
 
-  /**
-   * @ORM\Column(name="salt", type="string", length=255,nullable=true)
-   */
-  private $salt;
+      /**
+       * @ORM\Column(name="salt", type="string", length=255,nullable=true)
+       */
+      private $salt;
 
-  /**
-   * @ORM\Column(name="roles", type="array")
-   */
-  private $roles = array();
+      /**
+       * @ORM\Column(name="roles", type="array")
+       */
+      private $roles = array();
+
+      /**
+         * @Assert\NotBlank()
+         * @Assert\Length(max=4096)
+         */
+        private $plainPassword;
 
   // Les getters et setters
 
@@ -86,6 +96,15 @@ class User implements UserInterface
     public function getRoles()
     {
         return $this->roles;
+    }
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword($password)
+    {
+        $this->plainPassword = $password;
     }
 
     /**

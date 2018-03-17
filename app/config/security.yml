@@ -33,5 +33,6 @@ security:
         path:       logout
         target:     login
 
+
   access_control:
      - { path: ^/admin, roles: ROLE_ADMIN }
