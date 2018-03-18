@@ -54,9 +54,14 @@
 				  <p><strong>Message de {{ comment.user.username}} : </strong></p>
 				  <p>{{ comment.content}}</p>
 				</div>
-		  		
-		  			
 		  		{% endfor %}
+			  <strong>Ajouter un commentaire : </strong>
+			  {{ form_start(comment_form) }}
+			  <div class="form-group">
+              {{ form_widget(comment_form.content, {'attr': {'class': 'form-control'}}) }}
+			  </div>
+			  {{ form_widget(comment_form.send, {'attr': {'class': 'btn btn-primary'}, 'label':'Envoyer'}) }}
+              {{ form_end(comment_form) }}
 		  </div>
 		</div>
 	</div>

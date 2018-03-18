@@ -2,12 +2,14 @@
 
 namespace ForumBundle\Controller;
 
+use ForumBundle\Entity\Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use ForumBundle\Entity\Topic;
 use ForumBundle\Form\TopicType;
+use ForumBundle\Form\MessageType;
 use ForumBundle\Entity\User;
 use ForumBundle\Form\ChangeParametersType;
 use ForumBundle\Entity\ChangeParameters;
@@ -103,7 +105,7 @@ class UserController extends Controller
         ));
     }
 
-    public function topicAction($id)
+    public function topicAction($id, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $topic = $em->getRepository('ForumBundle:Topic')->find($id);
@@ -112,9 +114,31 @@ class UserController extends Controller
         }
         $comments = $em->getRepository('ForumBundle:Message')->findByTopic($topic);
 
+        $newComment = new Message();
+        $formComment = $this->createForm(MessageType::class, $newComment);
+
+        $formComment->handleRequest($request);
+
+        if($formComment->isSubmitted() && $formComment->isValid()){
+            $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+            if ($this->getUser()) {
+                $em = $this->getDoctrine()->getManager();
+                $newComment = $formComment->getData();
+                $newComment->setUser($this->getUser());
+                $newComment->setNbVote(0);
+                $newComment->setTopic($topic);
+                $em->persist($newComment);
+                $em->flush();
+
+                $request->getSession()->getFlashBag()->add('notice', 'Votre commentaire a bien été enregistré');
+            }
+            return $this->redirectToRoute('topic', array('id' => $topic->getId()));
+        }
+
         return $this->render('ForumBundle:User:topic.html.twig', array(
             "topic"=>$topic,
-            "comments"=>$comments
+            "comments"=>$comments,
+            "comment_form"=>$formComment->createView()
         ));
         
     }
