@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Response;
 use ForumBundle\Entity\Topic;
 use ForumBundle\Form\TopicType;
 use ForumBundle\Entity\User;
+use ForumBundle\Form\ChangeParametersType;
+use ForumBundle\Entity\ChangeParameters;
 
 use ForumBundle\Form\UserType;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -52,11 +54,29 @@ class UserController extends Controller
         return $this->render('ForumBundle:User:create_account.html.twig', array('form' => $form->createView()));
     }
 
-    public function accountParametersAction()
+    public function accountParametersAction(Request $request)
     {
-        return $this->render('ForumBundle:User:account_parameters.html.twig', array(
-            // ...
-        ));
+       
+        $changeParamatersModel = new ChangeParameters();
+        $passwordEncoder = $this->get('security.password_encoder');
+      $form = $this->createForm(ChangeParametersType::class, $changeParamatersModel);
+
+      $form->handleRequest($request);
+
+      if ($form->isSubmitted() && $form->isValid()) {
+            $password = $passwordEncoder->encodePassword($this->getUser(), $changeParamatersModel->getNewPassword());
+
+            $user= $this->getUser();
+           $user->setPassword($password);
+            $em = $this->getDoctrine()->getManager();
+    
+      
+            $em->flush();
+          // perform some action,
+          // such as encoding with MessageDigestPasswordEncoder and persist
+         return $this->redirectToRoute('home');
+      }
+        return $this->render('ForumBundle:User:account_parameters.html.twig',array('form' => $form->createView()));
     }
 
     public function newTopicAction(Request $request)

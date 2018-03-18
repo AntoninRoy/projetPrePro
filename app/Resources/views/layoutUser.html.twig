@@ -67,7 +67,7 @@
 
            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                    <li class="nav-item d-md-down-none">
-                        <a class="nav-link" href="#"><i class="icon-bell"></i><span class="badge badge-pill badge-danger">5</span></a>
+                        <a class="nav-link" href="#"><i class="icon-bell"></i><span class="badge badge-pill badge-danger">0</span></a>
                     </li>
                     <li class="vide20"></li>
                      <li class="nav-item d-md-down-none"><a class="nav-link" href="{{ path('logout') }}">Déconnexion</a></li>
@@ -80,7 +80,7 @@
                             <div class="dropdown-header text-center">
                                 <strong>Settings</strong>
                             </div>
-                            <a class="dropdown-item" href="{{ path('account_parameters') }}"><i class="fa fa-user"></i>Profil</a>
+                            <a class="dropdown-item" href="{{ path('account_parameters') }}"><i class="fa fa-user"></i>Changer mon mot de passe</a>
                             <a class="dropdown-item" href="{{ path('logout') }}"><i class="fa fa-lock"></i>Déconnexion</a>
                         </div>
                     </li>

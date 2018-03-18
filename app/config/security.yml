@@ -36,3 +36,4 @@ security:
 
   access_control:
      - { path: ^/admin, roles: ROLE_ADMIN }
+     - { path: ^/accountParameters, roles: IS_AUTHENTICATED_REMEMBERED }
