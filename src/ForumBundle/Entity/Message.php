@@ -29,11 +29,9 @@ class Message
     private $content;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="nbVote", type="integer")
+     * @ORM\ManyToMany(targetEntity="User")
      */
-    private $nbVote;
+    private $voters;
 
     /**
      * @ORM\ManyToOne(targetEntity="ForumBundle\Entity\User",cascade={"persist"})
@@ -53,6 +51,11 @@ class Message
      */
     private $topic;
 
+
+    public function __construct()
+    {
+        $this->voters = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id.
@@ -89,27 +92,13 @@ class Message
     }
 
     /**
-     * Set nbVote.
-     *
-     * @param int $nbVote
-     *
-     * @return Message
-     */
-    public function setNbVote($nbVote)
-    {
-        $this->nbVote = $nbVote;
-
-        return $this;
-    }
-
-    /**
      * Get nbVote.
      *
      * @return int
      */
     public function getNbVote()
     {
-        return $this->nbVote;
+        return sizeof($this->voters);
     }
 
 
@@ -183,5 +172,41 @@ class Message
     public function getTopic()
     {
         return $this->topic;
+    }
+
+    /**
+     * Add voter.
+     *
+     * @param \ForumBundle\Entity\User $voter
+     *
+     * @return Message
+     */
+    public function addVoter(\ForumBundle\Entity\User $voter)
+    {
+        $this->voters[] = $voter;
+
+        return $this;
+    }
+
+    /**
+     * Remove voter.
+     *
+     * @param \ForumBundle\Entity\User $voter
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeVoter(\ForumBundle\Entity\User $voter)
+    {
+        return $this->voters->removeElement($voter);
+    }
+
+    /**
+     * Get voters.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getVoters()
+    {
+        return $this->voters;
     }
 }

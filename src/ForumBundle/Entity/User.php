@@ -63,6 +63,12 @@ class User implements UserInterface
          */
         private $plainPassword;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Message")
+     */
+    private $votedMessages;
+
+
   // Les getters et setters
 
   public function eraseCredentials()
@@ -74,6 +80,8 @@ class User implements UserInterface
         // may not be needed, see section on salt below
         // $this->salt = md5(uniqid('', true));
         $this->roles = array('ROLE_USER');
+
+        $this->votedMessages = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function getUsername()
@@ -161,5 +169,54 @@ class User implements UserInterface
         $this->roles = $roles;
 
         return $this;
+    }
+
+    public function hasVoted(\ForumBundle\Entity\Message $message)
+    {
+        return ($this->votedMessages)->contains($message);
+    }
+
+    public function voteFor(\ForumBundle\Entity\Message $message)
+    {
+        if($this->hasVoted($message))
+            $this->removeVotedMessage($message);
+        else
+            $this->addVotedMessage($message);
+    }
+
+    /**
+     * Add votedMessage.
+     *
+     * @param \ForumBundle\Entity\Message $votedMessage
+     *
+     * @return User
+     */
+    public function addVotedMessage(\ForumBundle\Entity\Message $votedMessage)
+    {
+        $this->votedMessages[] = $votedMessage;
+
+        return $this;
+    }
+
+    /**
+     * Remove votedMessage.
+     *
+     * @param \ForumBundle\Entity\Message $votedMessage
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeVotedMessage(\ForumBundle\Entity\Message $votedMessage)
+    {
+        return $this->votedMessages->removeElement($votedMessage);
+    }
+
+    /**
+     * Get votedMessages.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getVotedMessages()
+    {
+        return $this->votedMessages;
     }
 }

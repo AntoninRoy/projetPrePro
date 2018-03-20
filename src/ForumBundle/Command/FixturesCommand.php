@@ -124,7 +124,6 @@ foreach ($messages as $message) {
             $messageNew->setUser($message["user"]);
             $messageNew->setTopic($message["topic"]);
             $messageNew->setContent($message["message"]);
-            $messageNew->setNbVote(0);
             $em->persist($messageNew);
         }
           $output->writeln("Terminé.");
