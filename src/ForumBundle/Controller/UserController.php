@@ -125,7 +125,6 @@ class UserController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 $newComment = $formComment->getData();
                 $newComment->setUser($this->getUser());
-                $newComment->setNbVote(0);
                 $newComment->setTopic($topic);
                 $em->persist($newComment);
                 $em->flush();
