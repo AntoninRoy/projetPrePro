@@ -18,6 +18,8 @@ use ForumBundle\Form\UserType;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 
 
@@ -112,7 +114,15 @@ class UserController extends Controller
         if(!$topic){
             return new Response("Le topic n'existe pas");
         }
-        $comments = $em->getRepository('ForumBundle:Message')->findByTopic($topic);
+        $commentsRepo = $em->getRepository('ForumBundle:Message')->findByTopic($topic);
+
+        $comments = array();
+        foreach ($commentsRepo as $c){
+            if($this->getUser() != null)
+                array_push($comments, array($c, $c->getNbVote(),$this->getUser()->hasVoted($c)));
+            else
+                array_push($comments, array($c, $c->getNbVote(),false));
+        }
 
         $newComment = new Message();
         $formComment = $this->createForm(MessageType::class, $newComment);
@@ -169,5 +179,20 @@ class UserController extends Controller
         ));
       }
 
-
+      public function voteMessageAction(Request $request)
+      {
+          $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+          if($request->isXmlHttpRequest()){
+              $em = $this->getDoctrine()->getManager();
+              $message = $em->getRepository('ForumBundle:Message')->find($request->get('id'));
+              $user = $this->getUser();
+              $message = $user->voteFor($message);
+              $em->merge($user);
+              $em->merge($message);
+              $em->flush();
+              return new JsonResponse(['nbvotes' => $message->getNbVote(), 'uservoted' => $user->hasVoted($message)]);
+          }
+          else
+              return new Response("Erreur: Il ne s'agit pas d'une requete Ajax", 400);
+      }
 }

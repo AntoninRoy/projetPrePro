@@ -179,9 +179,16 @@ class User implements UserInterface
     public function voteFor(\ForumBundle\Entity\Message $message)
     {
         if($this->hasVoted($message))
+        {
             $this->removeVotedMessage($message);
+            $message->removeVoter($this);
+        }
         else
+        {
             $this->addVotedMessage($message);
+            $message->addVoter($this);
+        }
+        return $message;
     }
 
     /**

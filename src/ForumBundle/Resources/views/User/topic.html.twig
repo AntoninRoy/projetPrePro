@@ -49,10 +49,24 @@
 		  </div>
 		  <div class="card-body">
 
-		  		{% for comment in comments %}
+		  		{% for commentLine in comments %}
 		  		<div class="alert alert-secondary" role="alert">
-				  <p><strong>Message de {{ comment.user.username}} : </strong></p>
-				  <p>{{ comment.content}}</p>
+					<div class="row">
+						<div class="col-sm-10">
+							<p><strong>Message de {{ commentLine[0].user.username}} : </strong></p>
+							<p>{{ commentLine[0].content}}</p>
+						</div>
+						<div class="col-sm-2">
+							<div class="row">
+								{% if commentLine[2] == false %}
+									<button id="buttonvote_{{ commentLine[0].id }}" class="btn btn-primary" onclick="voteComment({{ commentLine[0].id }})">+1</button>
+								{% else %}
+									<button id="buttonvote_{{commentLine[0].id }}" class="btn btn-secondary" onclick="voteComment({{ commentLine[0].id }})">-1</button>
+								{% endif %}
+							<div id="nbvote_{{commentLine[0].id }}" class="card-header"><strong>{{ commentLine[1] }}</strong></div>
+							</div>
+						</div>
+					</div>
 				</div>
 		  		{% endfor %}
 			  <strong>Ajouter un commentaire : </strong>
@@ -71,4 +85,34 @@
 
 
 
+{% endblock %}
+
+{% block javascripts %}
+	<script type="text/javascript">
+		function voteComment(id){
+            $.ajax({
+                url: "{{ path('vote_message') }}",
+                method: "post",
+                data: {id:id}
+            }).done(function(data){
+                refreshVoteComment(id,data);
+			});
+		}
+
+		function refreshVoteComment(id,data){
+		    $button = $("#buttonvote_"+id);
+		    $nbvote = $("#nbvote_"+id);
+		    $nbvote.text(data['nbvotes']);
+		    if(data['uservoted']){
+		        $button.removeClass("btn btn-primary");
+		        $button.addClass("btn btn-secondary");
+		        $button.text("-1");
+			}
+			else{
+                $button.removeClass("btn btn-secondary");
+                $button.addClass("btn btn-primary");
+                $button.text("+1");
+			}
+		}
+	</script>
 {% endblock %}

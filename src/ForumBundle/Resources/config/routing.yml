@@ -36,3 +36,7 @@ home:
 login:
     path:     /login
     defaults: { _controller: ForumBundle:User:login }
+
+vote_message:
+    path:     /votemessage
+    defaults: { _controller: ForumBundle:User:voteMessage }
