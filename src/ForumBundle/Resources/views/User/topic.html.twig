@@ -59,9 +59,9 @@
 						<div class="col-sm-2">
 							<div class="row">
 								{% if commentLine[2] == false %}
-									<button id="buttonvote_{{ commentLine[0].id }}" class="btn btn-primary" onclick="voteComment({{ commentLine[0].id }})">+1</button>
+									<button id="buttonvote_{{ commentLine[0].id }}" class="btn btn-secondary" onclick="voteComment({{ commentLine[0].id }})"><i class="fa fa-thumbs-up fa-lg mt-6"></i></button>
 								{% else %}
-									<button id="buttonvote_{{commentLine[0].id }}" class="btn btn-secondary" onclick="voteComment({{ commentLine[0].id }})">-1</button>
+									<button id="buttonvote_{{commentLine[0].id }}" class="btn btn-primary" onclick="voteComment({{ commentLine[0].id }})"><i class="fa fa-thumbs-up fa-lg mt-6"></i></button>
 								{% endif %}
 							<div id="nbvote_{{commentLine[0].id }}" class="card-header"><strong>{{ commentLine[1] }}</strong></div>
 							</div>
@@ -104,14 +104,12 @@
 		    $nbvote = $("#nbvote_"+id);
 		    $nbvote.text(data['nbvotes']);
 		    if(data['uservoted']){
-		        $button.removeClass("btn btn-primary");
-		        $button.addClass("btn btn-secondary");
-		        $button.text("-1");
-			}
-			else{
                 $button.removeClass("btn btn-secondary");
                 $button.addClass("btn btn-primary");
-                $button.text("+1");
+			}
+			else{
+                $button.removeClass("btn btn-primary");
+                $button.addClass("btn btn-secondary");
 			}
 		}
 	</script>

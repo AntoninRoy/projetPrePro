@@ -124,6 +124,12 @@ class UserController extends Controller
                 array_push($comments, array($c, $c->getNbVote(),false));
         }
 
+        usort($comments, function($a, $b) {
+           return $a[1] <=> $b[1];
+        });
+
+        $comments = array_reverse($comments);
+
         $newComment = new Message();
         $formComment = $this->createForm(MessageType::class, $newComment);
 
