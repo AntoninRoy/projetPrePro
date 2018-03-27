@@ -150,10 +150,17 @@ class UserController extends Controller
             return $this->redirectToRoute('topic', array('id' => $topic->getId()));
         }
 
+        if($this->getUser())
+            $userHasVoted = $this->getUser()->hasVotedTopic($topic);
+        else
+            $userHasVoted = false;
+
         return $this->render('ForumBundle:User:topic.html.twig', array(
             "topic"=>$topic,
             "comments"=>$comments,
-            "comment_form"=>$formComment->createView()
+            "comment_form"=>$formComment->createView(),
+            "user_has_voted_topic"=>$userHasVoted,
+            "nb_votes_topic"=>$topic->getNbVotes()
         ));
         
     }
@@ -201,4 +208,21 @@ class UserController extends Controller
           else
               return new Response("Erreur: Il ne s'agit pas d'une requete Ajax", 400);
       }
+
+    public function voteTopicAction(Request $request)
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        if($request->isXmlHttpRequest()){
+            $em = $this->getDoctrine()->getManager();
+            $topic = $em->getRepository('ForumBundle:Topic')->find($request->get('id'));
+            $user = $this->getUser();
+            $topic = $user->voteForTopic($topic);
+            $em->merge($user);
+            $em->merge($topic);
+            $em->flush();
+            return new JsonResponse(['nbvotes' => $topic->getNbVotes(), 'uservoted' => $user->hasVotedTopic($topic)]);
+        }
+        else
+            return new Response("Erreur: Il ne s'agit pas d'une requete Ajax", 400);
+    }
 }

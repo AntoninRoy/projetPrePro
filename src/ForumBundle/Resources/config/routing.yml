@@ -40,3 +40,7 @@ login:
 vote_message:
     path:     /votemessage
     defaults: { _controller: ForumBundle:User:voteMessage }
+
+vote_topic:
+    path:     /votetopic
+    defaults: { _controller: ForumBundle:User:voteTopic }

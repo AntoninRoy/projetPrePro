@@ -41,6 +41,16 @@ class Topic
      */
     private $user;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="User")
+     */
+    private $voters;
+
+    public function __construct()
+    {
+        $this->voters = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
 
     /**
      * Get id.
@@ -122,5 +132,51 @@ class Topic
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Add voter.
+     *
+     * @param \ForumBundle\Entity\User $voter
+     *
+     * @return Topic
+     */
+    public function addVoter(\ForumBundle\Entity\User $voter)
+    {
+        $this->voters[] = $voter;
+
+        return $this;
+    }
+
+    /**
+     * Remove voter.
+     *
+     * @param \ForumBundle\Entity\User $voter
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeVoter(\ForumBundle\Entity\User $voter)
+    {
+        return $this->voters->removeElement($voter);
+    }
+
+    /**
+     * Get voters.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getVoters()
+    {
+        return $this->voters;
+    }
+
+    /**
+     * Get nbVote.
+     *
+     * @return int
+     */
+    public function getNbVotes()
+    {
+        return sizeof($this->voters);
     }
 }

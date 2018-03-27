@@ -68,6 +68,11 @@ class User implements UserInterface
      */
     private $votedMessages;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Topic")
+     */
+    private $votedTopics;
+
 
   // Les getters et setters
 
@@ -82,6 +87,7 @@ class User implements UserInterface
         $this->roles = array('ROLE_USER');
 
         $this->votedMessages = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->votedTopics = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function getUsername()
@@ -191,6 +197,26 @@ class User implements UserInterface
         return $message;
     }
 
+    public function hasVotedTopic(\ForumBundle\Entity\Topic $topic)
+    {
+        return ($this->votedTopics)->contains($topic);
+    }
+
+    public function voteForTopic(\ForumBundle\Entity\Topic $topic)
+    {
+        if($this->hasVotedTopic($topic))
+        {
+            $this->removeVotedTopic($topic);
+            $topic->removeVoter($this);
+        }
+        else
+        {
+            $this->addVotedTopic($topic);
+            $topic->addVoter($this);
+        }
+        return $topic;
+    }
+
     /**
      * Add votedMessage.
      *
@@ -225,5 +251,41 @@ class User implements UserInterface
     public function getVotedMessages()
     {
         return $this->votedMessages;
+    }
+
+    /**
+     * Add votedTopic.
+     *
+     * @param \ForumBundle\Entity\Topic $votedTopic
+     *
+     * @return User
+     */
+    public function addVotedTopic(\ForumBundle\Entity\Topic $votedTopic)
+    {
+        $this->votedTopics[] = $votedTopic;
+
+        return $this;
+    }
+
+    /**
+     * Remove votedTopic.
+     *
+     * @param \ForumBundle\Entity\Topic $votedTopic
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeVotedTopic(\ForumBundle\Entity\Topic $votedTopic)
+    {
+        return $this->votedTopics->removeElement($votedTopic);
+    }
+
+    /**
+     * Get votedTopics.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getVotedTopics()
+    {
+        return $this->votedTopics;
     }
 }

@@ -20,13 +20,23 @@
 		  </div>
 		  <div class="card-body">
 		    <div class="row">
-		    <div class="col-sm-12 col-md-3">
-		    	<img src="https://images-na.ssl-images-amazon.com/images/I/61-BQ4DBoQL._UY395_.jpg" class="img-fluid" alt="Responsive image">
-		    </div>
-		    <div class="col-sm-12 col-md-9">
-		    	<h4 class="card-title">{{ topic.title}}</h4>
-		    	<p class="card-text">{{ topic.description}}</p>
-		    </div>
+				<div class="col-sm-12 col-md-3">
+					<img src="https://images-na.ssl-images-amazon.com/images/I/61-BQ4DBoQL._UY395_.jpg" class="img-fluid" alt="Responsive image">
+				</div>
+				<div class="col-sm-12 col-md-7">
+					<h4 class="card-title">{{ topic.title}}</h4>
+					<p class="card-text">{{ topic.description}}</p>
+				</div>
+				<div class="col-sm-2">
+					<div class="row">
+                        {% if user_has_voted_topic == false %}
+							<button id="buttonvotetopic_{{ topic.id }}" class="btn btn-secondary" onclick="voteTopic({{ topic.id }})"><i class="fa fa-thumbs-up fa-lg mt-6"></i></button>
+                        {% else %}
+							<button id="buttonvotetopic_{{topic.id }}" class="btn btn-primary" onclick="voteTopic({{ topic.id }})"><i class="fa fa-thumbs-up fa-lg mt-6"></i></button>
+                        {% endif %}
+						<div id="nbvotetopic_{{topic.id }}" class="card-header"><strong>{{ nb_votes_topic }}</strong></div>
+					</div>
+				</div>
 			</div>
 		    
 		  </div>
@@ -112,5 +122,29 @@
                 $button.addClass("btn btn-secondary");
 			}
 		}
+
+        function voteTopic(id){
+            $.ajax({
+                url: "{{ path('vote_topic') }}",
+                method: "post",
+                data: {id:id}
+            }).done(function(data){
+                refreshVoteTopic(id,data);
+            });
+        }
+
+        function refreshVoteTopic(id,data){
+            $button = $("#buttonvotetopic_"+id);
+            $nbvote = $("#nbvotetopic_"+id);
+            $nbvote.text(data['nbvotes']);
+            if(data['uservoted']){
+                $button.removeClass("btn btn-secondary");
+                $button.addClass("btn btn-primary");
+            }
+            else{
+                $button.removeClass("btn btn-primary");
+                $button.addClass("btn btn-secondary");
+            }
+        }
 	</script>
 {% endblock %}
