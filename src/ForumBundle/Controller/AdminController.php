@@ -12,8 +12,16 @@ class AdminController extends Controller
 {
 
     public function displayAccountAction()
-    {
+    {	$em = $this->getDoctrine()->getManager();
+    	$users = $em->getRepository('ForumBundle:User')->findAll();
         return $this->render('ForumBundle:Admin:display_account.html.twig', array(
+            "users"=> $users
+        ));
+    }
+
+    public function adminAction()
+    {
+        return $this->render('ForumBundle:Admin:admin_home.html.twig', array(
             // ...
         ));
     }

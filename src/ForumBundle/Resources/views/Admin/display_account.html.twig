@@ -1,7 +1,31 @@
 {% extends "::layoutAdmin.html.twig" %}
 
-{% block title %}ForumBundle:Admin:displayAccount{% endblock %}
+{% block title %}ForumBundle:User:accountParameters{% endblock %}
 
 {% block body %}
-<h1>Welcome to the Admin:displayAccount page</h1>
+<h1>display account</h1>
+ <table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Username</th>
+      <th>Role</th>
+    </tr>
+  </thead>
+  <tbody>
+  	{% for user in users %}
+
+    <tr>
+      <th scope="row">{{ user.id }}</th>
+      <td>{{ user.username }}</td>
+      <td>
+      	{% for role in user.roles %}
+      		{{ role }}
+      	{% endfor %}
+      </td>
+    </tr>
+      	{% endfor %}
+
+  </tbody>
+</table>
 {% endblock %}
