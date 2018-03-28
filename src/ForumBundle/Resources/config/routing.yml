@@ -2,6 +2,9 @@ display_account:
     path:     /admin/displayAccount
     defaults: { _controller: ForumBundle:Admin:displayAccount }
 
+admin_home:
+    path:     /admin
+    defaults: { _controller: ForumBundle:Admin:admin }
 
   
 login_check:
