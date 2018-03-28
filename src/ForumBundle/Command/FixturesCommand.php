@@ -31,10 +31,10 @@ class FixturesCommand extends ContainerAwareCommand
 
         $output->writeln("Suppression de la base de données...");
         $users = $em->getRepository('ForumBundle:User')->findAll();
-         $topics = $em->getRepository('ForumBundle:Topic')->findAll();
- $messages = $em->getRepository('ForumBundle:Message')->findAll();
+        $topics = $em->getRepository('ForumBundle:Topic')->findAll();
+        $messages = $em->getRepository('ForumBundle:Message')->findAll();
 
-foreach ($messages as $message) {
+        foreach ($messages as $message) {
           $em->remove($message);
     
         }
@@ -64,18 +64,24 @@ foreach ($messages as $message) {
         $user2->setRoles(array('ROLE_USER'));
         $em->persist($user2);
 
+        $user3 = new User();
+        $user3->setUsername("Mr.Beaver");
+        $user3->setPassword(password_hash("user", PASSWORD_BCRYPT));
+        $user3->setRoles(array('ROLE_USER'));
+        $em->persist($user3);
+
         $em->flush();
         $output->writeln("Terminé.");
 
         /*Ajout de projets*/
 
         $output->writeln("Ajout de projets ...");
-        $projectsNames=array("Bateau en or","Fusée à eau","Ordinateur à pédale","Shampoing pour chauve");
+        $projectsNames=array("Bateau en or","Fusée à eau","Ordinateur à pédale","Plateforme collaborative de partage de projets");
         $projectsDescription=array(
             "Création d'un bateau en or, avec des attributs uniques aux mondes",
-            "La fusée à eau sera révolutionnaire, fini le gaspillage du pétrole, mainteant c'est le gaspillage de l'eau",
-            "L'ordinateur à pédale permet aux gros flemmards d'être contraints à faire du sport",
-            "Le shampoing pour chauve sera le moins cher du marché et le plus écologique, en effet il sera fait avec seulement de l'air.",
+            "La fusée à eau sera révolutionnaire, fini le gaspillage du pétrole !",
+            "L'ordinateur à pédale vous permet d'utiliser votre PC sans surconsommer !",
+            "Avec cette plateforme collaborative, vous pourrez trouver des personnes avec qui réaliser vos projets!",
         );
         $topics=array();
         for ($i=0; $i <count($projectsNames) ; $i++) { 
@@ -83,29 +89,32 @@ foreach ($messages as $message) {
             $topic->setTitle($projectsNames[$i]);
             $topic->setDescription($projectsDescription[$i]);
             $topic->setUser($user2);
+            $topic->setDateheure(new \DateTime('2018/03/25'));
             $em->persist($topic);
             array_push($topics,$topic);
         }
          $output->writeln("Terminé.");
-
-     
         $em->flush();
+
+        $topics[0] = $user->voteForTopic($topics[0]);
+        $topics[0] = $user2->voteForTopic($topics[0]);
+        $topics[0] = $user3->voteForTopic($topics[0]);
+        $em->merge($user);
+        $em->merge($user2);
+        $em->merge($user3);
+        $em->merge($topics[0]);
+
 
         /*Ajout de messages*/
         $messages=array(
             array(
-                "message"=>"J'ai plein de tunes je peux aider.",
-                "user"=>$user2,
+                "message"=>"Je peux aider pour les fonds, si besoin.",
+                "user"=>$user,
                 "topic"=>$topics[0],
             ),
              array(
-                "message"=>"Moi j'ai pas de tunes mais j'ai plein d'amour.",
-                "user"=>$user2,
-                "topic"=>$topics[0],
-            ),
-            array(
-                "message"=>"Ta gueule",
-                "user"=>$user2,
+                "message"=>"Moi j'ai peu d'argent, mais je m'y connais en fonderie.",
+                "user"=>$user3,
                 "topic"=>$topics[0],
             ),
               array(
@@ -114,11 +123,12 @@ foreach ($messages as $message) {
                 "topic"=>$topics[1],
             ),
                array(
-                "message"=>"T tro con lé chove y ont pas de CheVe",
-                "user"=>$user2,
+                "message"=>"Pensez à vérifier si ça n'a pas déjà été fait",
+                "user"=>$user,
                 "topic"=>$topics[3],
             ),
         );
+
         foreach ($messages as $message) {
             $messageNew = new Message();
             $messageNew->setUser($message["user"]);

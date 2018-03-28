@@ -92,6 +92,7 @@ class UserController extends Controller
               if ($this->getUser()) {
                 $em = $this->getDoctrine()->getManager();
                 $topic->setUser($this->getUser());
+                $topic->setDateheure(new \DateTime());
                 $em->persist($topic);
                 $em->flush();
 
@@ -169,7 +170,19 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $topics = $em->getRepository('ForumBundle:Topic')->findAll();
+        $topicsRespositery = $em->getRepository('ForumBundle:Topic')->findAll();
+
+        $topics = array();
+
+        foreach ($topicsRespositery as $topic)
+            array_push($topics,array($topic,$topic->getNbVotes()));
+
+        usort($topics, function($a, $b) {
+            return $a[1] <=> $b[1];
+        });
+
+        $topics=array_reverse($topics);
+
         return $this->render('ForumBundle:User:home.html.twig', array(
             "topics"=>$topics
         ));

@@ -46,6 +46,11 @@ class Topic
      */
     private $voters;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $dateheure;
+
     public function __construct()
     {
         $this->voters = new \Doctrine\Common\Collections\ArrayCollection();
@@ -178,5 +183,29 @@ class Topic
     public function getNbVotes()
     {
         return sizeof($this->voters);
+    }
+
+    /**
+     * Set dateheure.
+     *
+     * @param \DateTime $dateheure
+     *
+     * @return Topic
+     */
+    public function setDateheure($dateheure)
+    {
+        $this->dateheure = $dateheure;
+
+        return $this;
+    }
+
+    /**
+     * Get dateheure.
+     *
+     * @return \DateTime
+     */
+    public function getDateheure()
+    {
+        return $this->dateheure;
     }
 }

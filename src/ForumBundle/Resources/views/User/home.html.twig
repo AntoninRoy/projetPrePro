@@ -1,6 +1,6 @@
 {% extends "::layoutUser.html.twig" %}
 
-{% block title %}ForumBundle:User:home{% endblock %}
+{% block title %}CollaBeaver - Plateforme collaborative de projets{% endblock %}
 
 {% block body %}
    
@@ -13,11 +13,11 @@
 	   {{ message }}
 	</div>
 {% endfor %}
+	<a href="#"><img class="banner" src="{{ asset('ForumRessources/src/img/collabeaver_banner.png') }}"></img></a>
 <div class="card">
   <div class="card-body">
-    <h4 class="card-title">Bienvenue sur CollaBeaver !</h4>
-	  <p><img src="{{ asset('ForumRessources/src/img/collabeaver_banner.png') }}"></img></p>
-    <p class="card-text">Ici, vous pouvez obtenir ou donner de l'aide sur le projet de votre choix !</p>
+    <h4 class="card-title">Bienvenue sur CollaBeaver, la plateforme qui vous permet de partager vos projets en tous genre !</h4>
+    <p class="card-text">Ici, vous pouvez obtenir ou donner de l'aide sur le projet de vos projets, ou bien aider d'autres personnes à en réaliser!</p>
     <p>N'hésitez pas à vous inscrire pour pouvoir participer dès maintenant !</p>
 
     <a href="{{ path('new_topic') }}" class="btn btn-primary">Proposer un nouveau projet</a>
@@ -28,16 +28,16 @@
 	{% for topic in topics %}
 	<div class="col-sm-4 col-md-3">
 		<div class="card">
-			<a href="{{ path('topic', { 'id': topic.id }) }}">
+			<a href="{{ path('topic', { 'id': topic[0].id }) }}">
 				<div class="card-header">
-					{{ topic.title }}
+					<p>{{ topic[0].title }}</p>
 				</div>
 			</a>
 			<div class="card-body">
-			{{ topic.description}}
+			{{ topic[0].description}}
 			</div>
 			<div class="card-footer text-muted">
-			  par {{ topic.user.username }} le  DD/MM/YYYY
+			  			par {{ topic[0].user.username }} le  {{ topic[0].dateheure | date("d/m/Y") }}   <i style="padding-left: 20px" class="fa fa-thumbs-up fa-lg mt-6"></i> <strong>{{ topic[1] }}</strong>
 			  </div>
 		</div>
 	</div>
